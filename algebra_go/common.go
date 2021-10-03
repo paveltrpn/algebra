@@ -1,4 +1,4 @@
-package main
+package algebra_go
 
 import "math"
 
@@ -49,15 +49,15 @@ func sqrtf(x float32) float32
 	(1	3)
 */
 
-func id_rw(i int32, j int32, n int32) int32 {
+func IdRw(i int32, j int32, n int32) int32 {
 	return (i*n + j)
 }
 
-func id_cw(i int32, j int32, n int32) int32 {
+func IdCw(i int32, j int32, n int32) int32 {
 	return (j*n + i)
 }
 
-func fabs(x float32) float32 {
+func Fabs(x float32) float32 {
 	if x < 0.0 {
 		return -x
 	} else {
@@ -83,14 +83,14 @@ func sinf(x float32) float32 {
 }
 */
 
-func cosf(x float32) float32 {
+func Cosf(x float32) float32 {
 	return float32(math.Cos(float64(x)))
 }
 
-func sinf(x float32) float32 {
+func Sinf(x float32) float32 {
 	return float32(math.Sin(float64(x)))
 }
 
-func sqrtf(x float32) float32 {
+func Sqrtf(x float32) float32 {
 	return float32(math.Sqrt(float64(x)))
 }

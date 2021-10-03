@@ -1,32 +1,8 @@
-package main
+package algebra_go
 
-import (
-	"fmt"
-)
+type Vec3 [3]float32
 
-type vec3_t [3]float32
-
-/* func proto
-
-func vec3_show(v vec3_t)
-func vec3_copy(v vec3_t) (rt vec3_t)
-func vec3_set(x float32, y float32, z float32) (rt vec3_t)
-func vec3_lenght(v vec3_t) float32
-func vec3_normalize(v vec3_t)
-func vec3_scale(v vec3_t, scale float32) vec3_t
-func vec3_invert(v vec3_t) (rt vec3_t)
-func vec3_dot(a vec3_t, b vec3_t) float32
-func vec3_sum(a, b vec3_t) (rt vec3_t)
-func vec3_sub(a, b vec3_t) (rt vec3_t)
-func vec3_cross(a, b vec3_t) (rt vec3_t)
-
-*/
-
-func vec3_show(v vec3_t) {
-	fmt.Printf("%5.2f %5.2f %5.2f\n", v[_XC], v[_YC], v[_ZC])
-}
-
-func vec3_copy(v vec3_t) (rt vec3_t) {
+func Vec3Copy(v Vec3) (rt Vec3) {
 	rt[0] = v[0]
 	rt[1] = v[1]
 	rt[2] = v[2]
@@ -34,7 +10,7 @@ func vec3_copy(v vec3_t) (rt vec3_t) {
 	return rt
 }
 
-func vec3_set(x float32, y float32, z float32) (rt vec3_t) {
+func Vec3Set(x float32, y float32, z float32) (rt Vec3) {
 	rt[0] = x
 	rt[1] = y
 	rt[2] = z
@@ -42,19 +18,15 @@ func vec3_set(x float32, y float32, z float32) (rt vec3_t) {
 	return rt
 }
 
-func vec3_lenght(v vec3_t) float32 {
-	return sqrtf(v[_XC]*v[_XC] +
+func Vec3Lenght(v Vec3) float32 {
+	return Sqrtf(v[_XC]*v[_XC] +
 		v[_YC]*v[_YC] +
 		v[_ZC]*v[_ZC])
 
 }
 
-func vec3_normalize(v vec3_t) (rt vec3_t) {
-	var (
-		len float32
-	)
-
-	len = vec3_lenght(v)
+func Vec3Normalize(v Vec3) (rt Vec3) {
+	len := Vec3Lenght(v)
 
 	if len != 0.0 {
 		rt[_ZC] = v[_ZC] / len
@@ -65,7 +37,7 @@ func vec3_normalize(v vec3_t) (rt vec3_t) {
 	return rt
 }
 
-func vec3_scale(v vec3_t, scale float32) (rt vec3_t) {
+func Vec3Scale(v Vec3, scale float32) (rt Vec3) {
 	v[0] *= scale
 	v[1] *= scale
 	v[2] *= scale
@@ -73,7 +45,7 @@ func vec3_scale(v vec3_t, scale float32) (rt vec3_t) {
 	return rt
 }
 
-func vec3_invert(v vec3_t) (rt vec3_t) {
+func Vec3Invert(v Vec3) (rt Vec3) {
 	rt[_XC] = -v[_XC]
 	rt[_YC] = -v[_YC]
 	rt[_ZC] = -v[_ZC]
@@ -81,11 +53,11 @@ func vec3_invert(v vec3_t) (rt vec3_t) {
 	return rt
 }
 
-func vec3_dot(a vec3_t, b vec3_t) float32 {
+func Vec3Dot(a Vec3, b Vec3) float32 {
 	return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
 }
 
-func vec3_sum(a, b vec3_t) (rt vec3_t) {
+func Vec3Sum(a, b Vec3) (rt Vec3) {
 	rt[0] = a[0] + b[0]
 	rt[1] = a[1] + b[1]
 	rt[2] = a[2] + b[2]
@@ -93,7 +65,7 @@ func vec3_sum(a, b vec3_t) (rt vec3_t) {
 	return rt
 }
 
-func vec3_sub(a, b vec3_t) (rt vec3_t) {
+func Vec3Sub(a, b Vec3) (rt Vec3) {
 	rt[0] = a[0] - b[0]
 	rt[1] = a[1] - b[1]
 	rt[2] = a[2] - b[2]
@@ -101,7 +73,7 @@ func vec3_sub(a, b vec3_t) (rt vec3_t) {
 	return rt
 }
 
-func vec3_cross(a, b vec3_t) (rt vec3_t) {
+func Vec3Cross(a, b Vec3) (rt Vec3) {
 	rt[0] = a[_YC]*b[_ZC] - a[_ZC]*b[_YC]
 	rt[0] = a[_ZC]*b[_XC] - a[_XC]*b[_ZC]
 	rt[0] = a[_XC]*b[_YC] - a[_YC]*b[_XC]

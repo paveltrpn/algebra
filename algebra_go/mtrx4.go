@@ -1,34 +1,13 @@
-package main
+package algebra_go
 
 import (
 	"fmt"
 	"math"
 )
 
-type mtrx4_t [16]float32
+type Mtrx4 [16]float32
 
-/* func proto
-
-func mtrx4_idtt() (rt mtrx4_t)
-func mtrx4_set(m [16]float32) (rt mtrx4_t)
-func mtrx4_set_float(a00, a01, a02,
-					 a10, a11, a12,
-					 a20, a21, a22 float32) (rt mtrx4_t)
-func mtrx4_set_euler(yaw, pitch, roll float32) (rt mtrx4_t)
-func mtrx4_set_axisangl(ax vec3_t, phi float32) (rt mtrx4_t)
-func mtrx4_show(m mtrx4_t)
-func mtrx4_det(m mtrx4_t) float32
-func mtrx4_det_lu(m mtrx4_t) (rt float32)				EMPTY
-func mtrx4_mult(a, b mtrx4_t) (rt mtrx4_t)
-func mtrx4_mult_vec(m mtrx4_t, v vec4_t) (rt vec4_t)
-func mtrx4_lu(m mtrx4_t) (lm, um mtrx4_t)
-func mtrx4_ldlt(m mtrx4_t) (lm mtrx4_t, dv vec4_t)
-func mtrx4_invert(m mtrx4_t) (rt mtrx4_t)				EMPTY
-func mtrx4_solve_gauss(m mtrx4_t, v vec4_t) (rt vec4_t)
-
-*/
-
-func mtrx4_idtt() (rt mtrx4_t) {
+func Mtrx4Idtt() (rt Mtrx4) {
 	var (
 		i, j int32
 		n    int32 = 4
@@ -37,9 +16,9 @@ func mtrx4_idtt() (rt mtrx4_t) {
 	for i = 0; i < n; i++ {
 		for j = 0; j < n; j++ {
 			if i == j {
-				rt[id_rw(i, j, n)] = 1.0
+				rt[IdRw(i, j, n)] = 1.0
 			} else {
-				rt[id_rw(i, j, n)] = 0.0
+				rt[IdRw(i, j, n)] = 0.0
 			}
 		}
 	}
@@ -47,7 +26,7 @@ func mtrx4_idtt() (rt mtrx4_t) {
 	return rt
 }
 
-func mtrx4_set(m [16]float32) (rt mtrx4_t) {
+func Mtrx4Set(m [16]float32) (rt Mtrx4) {
 	var (
 		i, j int32
 		n    int32 = 4
@@ -55,16 +34,16 @@ func mtrx4_set(m [16]float32) (rt mtrx4_t) {
 
 	for i = 0; i < n; i++ {
 		for j = 0; j < n; j++ {
-			rt[id_rw(i, j, n)] = m[id_rw(i, j, n)]
+			rt[IdRw(i, j, n)] = m[IdRw(i, j, n)]
 		}
 	}
 	return rt
 }
 
-func mtrx4_set_float(a00, a01, a02, a03,
+func Mtrx4SetFloat(a00, a01, a02, a03,
 	a10, a11, a12, a13,
 	a20, a21, a22, a23,
-	a30, a31, a32, a33 float32) (rt mtrx4_t) {
+	a30, a31, a32, a33 float32) (rt Mtrx4) {
 
 	rt[0] = a00
 	rt[1] = a01
@@ -89,17 +68,17 @@ func mtrx4_set_float(a00, a01, a02, a03,
 	return rt
 }
 
-func mtrx4_set_euler(yaw, pitch, roll float32) (rt mtrx4_t) {
+func Mtrx4SetEuler(yaw, pitch, roll float32) (rt Mtrx4) {
 	var (
 		cosy, siny, cosp, sinp, cosr, sinr float32
 	)
 
-	cosy = cosf(yaw)
-	siny = sinf(yaw)
-	cosp = cosf(pitch)
-	sinp = sinf(pitch)
-	cosr = cosf(roll)
-	sinr = sinf(roll)
+	cosy = Cosf(yaw)
+	siny = Sinf(yaw)
+	cosp = Cosf(pitch)
+	sinp = Sinf(pitch)
+	cosr = Cosf(roll)
+	sinr = Sinf(roll)
 
 	rt[0] = cosy*cosr - siny*cosp*sinr
 	rt[1] = -cosy*sinr - siny*cosp*cosr
@@ -124,13 +103,13 @@ func mtrx4_set_euler(yaw, pitch, roll float32) (rt mtrx4_t) {
 	return rt
 }
 
-func mtrx4_set_axisangl(ax vec3_t, phi float32) (rt mtrx4_t) {
+func Mtrx4SetAxisAngl(ax Vec3, phi float32) (rt Mtrx4) {
 	var (
 		cosphi, sinphi, vxvy, vxvz, vyvz, vx, vy, vz float32
 	)
 
-	cosphi = cosf(phi)
-	sinphi = sinf(phi)
+	cosphi = Cosf(phi)
+	sinphi = Sinf(phi)
 	vxvy = ax[_XC] * ax[_YC]
 	vxvz = ax[_XC] * ax[_ZC]
 	vyvz = ax[_YC] * ax[_ZC]
@@ -161,42 +140,35 @@ func mtrx4_set_axisangl(ax vec3_t, phi float32) (rt mtrx4_t) {
 	return rt
 }
 
-func mtrx4_show(m mtrx4_t) {
-	fmt.Printf("%5.2f %5.2f %5.2f %5.2f\n", m[0], m[1], m[2], m[3])
-	fmt.Printf("%5.2f %5.2f %5.2f %5.2f\n", m[4], m[5], m[6], m[7])
-	fmt.Printf("%5.2f %5.2f %5.2f %5.2f\n", m[8], m[9], m[10], m[11])
-	fmt.Printf("%5.2f %5.2f %5.2f %5.2f\n", m[12], m[13], m[14], m[15])
-}
-
-func mtrx4_det(m mtrx4_t) float32 {
+func Mtrx4det(m Mtrx4) float32 {
 	return 0.0
 }
 
-func mtrx4_det_lu(m mtrx4_t) (rt float32) {
+func Mtrx4det_lu(m Mtrx4) (rt float32) {
 	const (
 		mrange int32 = 4
 	)
 
 	var (
 		i            int32
-		l, u         mtrx4_t
+		l, u         Mtrx4
 		l_det, u_det float32
 	)
 
-	l, u = mtrx4_lu(m)
+	l, u = Mtrx4LU(m)
 
 	l_det = l[0]
 	u_det = u[0]
 
 	for i = 1; i < mrange; i++ {
-		l_det *= l[id_rw(i, i, mrange)]
-		u_det *= u[id_rw(i, i, mrange)]
+		l_det *= l[IdRw(i, i, mrange)]
+		u_det *= u[IdRw(i, i, mrange)]
 	}
 
 	return l_det * u_det
 }
 
-func mtrx4_mult(a, b mtrx4_t) (rt mtrx4_t) {
+func Mtrx4mult(a, b Mtrx4) (rt Mtrx4) {
 	const (
 		mrange int32 = 4
 	)
@@ -210,16 +182,16 @@ func mtrx4_mult(a, b mtrx4_t) (rt mtrx4_t) {
 		for j = 0; j < mrange; j++ {
 			tmp = 0.0
 			for k = 0; k < mrange; k++ {
-				tmp = tmp + a[id_rw(k, j, mrange)]*b[id_rw(i, k, mrange)]
+				tmp = tmp + a[IdRw(k, j, mrange)]*b[IdRw(i, k, mrange)]
 			}
-			rt[id_rw(i, j, mrange)] = tmp
+			rt[IdRw(i, j, mrange)] = tmp
 		}
 	}
 
 	return rt
 }
 
-func mtrx4_mult_vec(m mtrx4_t, v vec4_t) (rt vec4_t) {
+func Mtrx4MultVec(m Mtrx4, v Vec4) (rt Vec4) {
 	const (
 		mrange int32 = 4
 	)
@@ -232,7 +204,7 @@ func mtrx4_mult_vec(m mtrx4_t, v vec4_t) (rt vec4_t) {
 	for i = 0; i < mrange; i++ {
 		tmp = 0
 		for j = 0; j < mrange; j++ {
-			tmp = tmp + m[id_rw(i, j, mrange)]*v[j]
+			tmp = tmp + m[IdRw(i, j, mrange)]*v[j]
 		}
 		rt[i] = tmp
 	}
@@ -240,7 +212,7 @@ func mtrx4_mult_vec(m mtrx4_t, v vec4_t) (rt vec4_t) {
 	return rt
 }
 
-func mtrx4_lu(m mtrx4_t) (lm, um mtrx4_t) {
+func Mtrx4LU(m Mtrx4) (lm, um Mtrx4) {
 	const (
 		mrange int32 = 4
 	)
@@ -254,20 +226,20 @@ func mtrx4_lu(m mtrx4_t) (lm, um mtrx4_t) {
 		for k = i; k < mrange; k++ {
 			sum = 0
 			for j = 0; j < i; j++ {
-				sum += (lm[id_rw(i, j, mrange)] * um[id_rw(j, k, mrange)])
+				sum += (lm[IdRw(i, j, mrange)] * um[IdRw(j, k, mrange)])
 			}
-			um[id_rw(i, k, mrange)] = m[id_rw(i, k, mrange)] - sum
+			um[IdRw(i, k, mrange)] = m[IdRw(i, k, mrange)] - sum
 		}
 
 		for k = i; k < mrange; k++ {
 			if i == k {
-				lm[id_rw(i, i, mrange)] = 1.0
+				lm[IdRw(i, i, mrange)] = 1.0
 			} else {
 				sum = 0
 				for j = 0; j < i; j++ {
-					sum += lm[id_rw(k, j, mrange)] * um[id_rw(j, i, mrange)]
+					sum += lm[IdRw(k, j, mrange)] * um[IdRw(j, i, mrange)]
 				}
-				lm[id_rw(k, i, mrange)] = (m[id_rw(k, i, mrange)] - sum) / um[id_rw(i, i, mrange)]
+				lm[IdRw(k, i, mrange)] = (m[IdRw(k, i, mrange)] - sum) / um[IdRw(i, i, mrange)]
 			}
 		}
 	}
@@ -275,7 +247,7 @@ func mtrx4_lu(m mtrx4_t) (lm, um mtrx4_t) {
 	return lm, um
 }
 
-func mtrx4_ldlt(m mtrx4_t) (lm mtrx4_t, dv vec4_t) {
+func Mtrx4LDLT(m Mtrx4) (lm Mtrx4, dv Vec4) {
 	const (
 		mrange int32 = 4
 	)
@@ -287,18 +259,18 @@ func mtrx4_ldlt(m mtrx4_t) (lm mtrx4_t, dv vec4_t) {
 
 	for i = 0; i < mrange; i++ {
 		for j = i; j < mrange; j++ {
-			sum = m[id_rw(j, i, mrange)]
+			sum = m[IdRw(j, i, mrange)]
 			for k = 0; k < i; k++ {
-				sum = sum - lm[id_rw(i, k, mrange)]*dv[k]*lm[id_rw(j, k, mrange)]
+				sum = sum - lm[IdRw(i, k, mrange)]*dv[k]*lm[IdRw(j, k, mrange)]
 				if i == j {
 					if sum <= 0 {
-						fmt.Println("mtrx4_ldlt(): mtrx is not positive deﬁnite")
-						return mtrx4_idtt(), vec4_set(0.0, 0.0, 0.0, 0.0)
+						fmt.Println("Mtrx4LDLT(): mtrx is not positive deﬁnite")
+						return Mtrx4Idtt(), Vec4Set(0.0, 0.0, 0.0, 0.0)
 					}
 					dv[i] = sum
-					lm[id_rw(i, i, mrange)] = 1.0
+					lm[IdRw(i, i, mrange)] = 1.0
 				} else {
-					lm[id_rw(j, i, mrange)] = sum / dv[i]
+					lm[IdRw(j, i, mrange)] = sum / dv[i]
 				}
 			}
 		}
@@ -307,11 +279,11 @@ func mtrx4_ldlt(m mtrx4_t) (lm mtrx4_t, dv vec4_t) {
 	return lm, dv
 }
 
-func mtrx4_invert(m mtrx4_t) (rt mtrx4_t) {
-	return mtrx4_idtt()
+func Mtrx4Invert(m Mtrx4) (rt Mtrx4) {
+	return Mtrx4Idtt()
 }
 
-func mtrx4_solve_gauss(m mtrx4_t, v vec4_t) (rt vec4_t) {
+func Mtrx4SolveGauss(m Mtrx4, v Vec4) (rt Vec4) {
 	const (
 		mrange int32 = 4
 	)
@@ -324,7 +296,7 @@ func mtrx4_solve_gauss(m mtrx4_t, v vec4_t) (rt vec4_t) {
 
 	for i = 0; i < mrange; i++ { //было ++i
 		for j = 0; j < mrange; j++ { //было ++j
-			a[i][j] = m[id_rw(i, j, mrange)]
+			a[i][j] = m[IdRw(i, j, mrange)]
 			a[i][mrange] = v[i]
 		}
 	}
@@ -363,7 +335,7 @@ func mtrx4_solve_gauss(m mtrx4_t, v vec4_t) (rt vec4_t) {
 	return rt
 }
 
-func mtrx4_insert_cmn(m mtrx4_t, v vec4_t, cmn int32) (rt mtrx4_t) {
+func Mtrx4InsertCmn(m Mtrx4, v Vec4, cmn int32) (rt Mtrx4) {
 	const (
 		mrange int32 = 4
 	)
@@ -383,7 +355,7 @@ func mtrx4_insert_cmn(m mtrx4_t, v vec4_t, cmn int32) (rt mtrx4_t) {
 
 }
 
-func mtrx4_solve_kramer(m mtrx4_t, v vec4_t) (rt vec4_t) {
+func Mtrx4SolveKramer(m Mtrx4, v Vec4) (rt Vec4) {
 	const (
 		mrange int32 = 4
 	)
@@ -391,19 +363,19 @@ func mtrx4_solve_kramer(m mtrx4_t, v vec4_t) (rt vec4_t) {
 	var (
 		i       int32
 		det     float32
-		kr_mtrx mtrx4_t
+		kr_mtrx Mtrx4
 	)
 
-	det = mtrx4_det_lu(m)
+	det = Mtrx4det_lu(m)
 
-	if fabs(det) < f_eps {
-		fmt.Println("mtrx4_solve_kramer(): system has no solve")
-		return vec4_set(0.0, 0.0, 0.0, 0.0)
+	if Fabs(det) < f_eps {
+		fmt.Println("Mtrx4SolveKramer(): system has no solve")
+		return Vec4Set(0.0, 0.0, 0.0, 0.0)
 	}
 
 	for i = 0; i < mrange; i++ {
-		kr_mtrx = mtrx4_insert_cmn(m, v, i)
-		rt[i] = mtrx4_det_lu(kr_mtrx) / det
+		kr_mtrx = Mtrx4InsertCmn(m, v, i)
+		rt[i] = Mtrx4det_lu(kr_mtrx) / det
 	}
 
 	return rt

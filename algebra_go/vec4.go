@@ -1,31 +1,8 @@
-package main
+package algebra_go
 
-import (
-	"fmt"
-)
+type Vec4 [4]float32
 
-type vec4_t [4]float32
-
-/* func proto
-
-func vec4_show(v vec4_t)
-func vec4_copy(v vec4_t) (rt vec4_t)
-func vec4_set(x float32, y float32) (rt vec4_t)
-func vec4_lenght(v vec4_t) float32
-func vec4_normalize(v vec4_t)
-func vec4_scale(v vec4_t, scale float32) (rt vec4_t)
-func vec4_invert(v vec4_t) (rt vec4_t)
-func vec4_dot(a vec4_t, b vec4_t) float32
-func vec4_sum(a, b vec4_t) (rt vec4_t)
-func vec4_sub(a, b vec4_t) (rt vec4_t)
-
-*/
-
-func vec4_show(v vec4_t) {
-	fmt.Printf("%5.2f %5.2f %5.2f %5.2f\n", v[_XC], v[_YC], v[_ZC], v[_WC])
-}
-
-func vec4_copy(v vec4_t) (rt vec4_t) {
+func Vec4Copy(v Vec4) (rt Vec4) {
 	rt[0] = v[0]
 	rt[1] = v[1]
 	rt[2] = v[2]
@@ -34,7 +11,7 @@ func vec4_copy(v vec4_t) (rt vec4_t) {
 	return rt
 }
 
-func vec4_set(x, y, z, w float32) (rt vec4_t) {
+func Vec4Set(x, y, z, w float32) (rt Vec4) {
 	rt[0] = x
 	rt[1] = y
 	rt[2] = z
@@ -43,20 +20,16 @@ func vec4_set(x, y, z, w float32) (rt vec4_t) {
 	return rt
 }
 
-func vec4_lenght(v vec4_t) float32 {
-	return sqrtf(v[_XC]*v[_XC] +
+func Vec4Lenght(v Vec4) float32 {
+	return Sqrtf(v[_XC]*v[_XC] +
 		v[_YC]*v[_YC] +
 		v[_ZC]*v[_ZC] +
 		v[_WC]*v[_WC])
 
 }
 
-func vec4_normalize(v vec4_t) (rt vec4_t) {
-	var (
-		len float32
-	)
-
-	len = vec4_lenght(v)
+func Vec4Normalize(v Vec4) (rt Vec4) {
+	len := Vec4Lenght(v)
 
 	if len != 0.0 {
 		rt[_XC] = v[_XC] / len
@@ -68,7 +41,7 @@ func vec4_normalize(v vec4_t) (rt vec4_t) {
 	return rt
 }
 
-func vec4_scale(v vec4_t, scale float32) (rt vec4_t) {
+func Vec4Scale(v Vec4, scale float32) (rt Vec4) {
 	v[0] *= scale
 	v[1] *= scale
 	v[2] *= scale
@@ -77,7 +50,7 @@ func vec4_scale(v vec4_t, scale float32) (rt vec4_t) {
 	return rt
 }
 
-func vec4_invert(v vec4_t) (rt vec4_t) {
+func Vec4Invert(v Vec4) (rt Vec4) {
 	rt[_XC] = -v[_XC]
 	rt[_YC] = -v[_YC]
 	rt[_ZC] = -v[_ZC]
@@ -86,11 +59,11 @@ func vec4_invert(v vec4_t) (rt vec4_t) {
 	return rt
 }
 
-func vec4_dot(a vec4_t, b vec4_t) float32 {
+func Vec4Dot(a Vec4, b Vec4) float32 {
 	return a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]
 }
 
-func vec4_sum(a, b vec4_t) (rt vec4_t) {
+func Vec4Sum(a, b Vec4) (rt Vec4) {
 	rt[0] = a[0] + b[0]
 	rt[1] = a[1] + b[1]
 	rt[2] = a[2] + b[2]
@@ -99,7 +72,7 @@ func vec4_sum(a, b vec4_t) (rt vec4_t) {
 	return rt
 }
 
-func vec4_sub(a, b vec4_t) (rt vec4_t) {
+func Vec4Sub(a, b Vec4) (rt Vec4) {
 	rt[0] = a[0] - b[0]
 	rt[1] = a[1] - b[1]
 	rt[2] = a[2] - b[2]
