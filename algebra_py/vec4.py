@@ -5,8 +5,8 @@ from common import *
 from math import sqrt
 
 class vec4(object):
-    def __init__(self) -> None:
-        self.data = array("f", [0.0, 0.0, 0.0, 0.0])
+    def __init__(self, x: float=0.0, y: float=0.0, z: float=0.0, w: float=0.0) -> None:
+        self.data = array("f", [x, y, z, w])
 
     def __repr__(self) -> str:
         return """
@@ -25,7 +25,7 @@ def vec4Lenght(v: vec4) -> float:
 		        v[2]*v[2] +
 		        v[3]*v[3])
 
-def Vec4Normalize(v: vec4) -> vec4:
+def vec4Normalize(v: vec4) -> vec4:
     len = vec4Lenght(v)
 
     rt = v
