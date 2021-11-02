@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+    // "strict": true,
+    "target": "ES2020",
+    "module": "ES6",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    },
+}
